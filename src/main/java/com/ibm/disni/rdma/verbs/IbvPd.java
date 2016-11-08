@@ -72,7 +72,7 @@ public class IbvPd  {
 		return verbs.regMr(this, buffer, access);
 	}
 	
-	public int deallocPd() throws Exception {
+	public int deallocPd() throws IOException {
 		return verbs.deallocPd(this);
 	}
 }

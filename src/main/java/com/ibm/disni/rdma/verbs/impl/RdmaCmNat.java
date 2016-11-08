@@ -141,7 +141,7 @@ public class RdmaCmNat extends RdmaCm {
         dst.writeBack(dstBuf.getBuffer());
         NatCmaIdPrivate idPriv = (NatCmaIdPrivate) id;
         int ret = nativeDispatcher._resolveAddr(idPriv.getObjId(), 0, dstBuf.address(), timeout);
-        logger.info("resolveAddr, addres " + destination.toString());
+        logger.info("resolveAddr, address " + destination.toString());
         dstBuf.free();
         
         return ret;
