@@ -131,7 +131,7 @@ public class NatPostSendCall extends SVCPostSend {
 		return this;
 	}
 	
-	public SendWRMod getWrMod(int index) throws IOException{
+	public SendWRMod getWrMod(int index) {
 		return wrNatList.get(index);
 	}
 	

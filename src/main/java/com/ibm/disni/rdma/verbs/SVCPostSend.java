@@ -37,7 +37,7 @@ public abstract class SVCPostSend implements StatefulVerbCall<SVCPostSend> {
 	 * @return the work request
 	 * @throws Exception in case the index is out-of-bound.
 	 */
-	public abstract SendWRMod getWrMod(int index) throws IOException;
+	public abstract SendWRMod getWrMod(int index);
 	
 	/**
 	 * Provides access methods to modify a given work-request belonging to this SVC object.
