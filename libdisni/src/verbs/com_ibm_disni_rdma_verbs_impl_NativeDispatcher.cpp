@@ -914,7 +914,7 @@ JNIEXPORT jint JNICALL Java_com_ibm_disni_rdma_verbs_impl_NativeDispatcher__1pos
 		if (ret == 0){
 			//log("j2c::post_send: ret %i\n", ret);
 		} else {
-			log("j2c::post_send: ibv_post_send failed %s\n", strerror(errno));
+			log("j2c::post_send: ibv_post_send failed %s (%s)\n", strerror(errno), errno);
 		}
  
 	} else {
