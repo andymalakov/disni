@@ -28,7 +28,7 @@ import com.ibm.disni.rdma.verbs.IbvSendWR;
 import com.ibm.disni.rdma.verbs.IbvSge;
 import com.ibm.disni.rdma.verbs.SVCPostSend.RdmaMod;
 import com.ibm.disni.rdma.verbs.SVCPostSend.SendWRMod;
-import com.ibm.disni.rdma.verbs.SVCPostSend.SgeMod;
+import com.ibm.disni.rdma.verbs.SgeMod;
 
 
 //struct ibv_send_wr {

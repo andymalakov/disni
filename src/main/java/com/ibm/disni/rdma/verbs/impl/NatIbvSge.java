@@ -24,15 +24,15 @@ package com.ibm.disni.rdma.verbs.impl;
 import java.nio.ByteBuffer;
 
 import com.ibm.disni.rdma.verbs.IbvSge;
-import com.ibm.disni.rdma.verbs.SVCPostSend.SgeMod;
+import com.ibm.disni.rdma.verbs.SgeMod;
 
 public class NatIbvSge extends IbvSge implements SgeMod {
 	public static int CSIZE = 16;
-	
-	private NatPostSendCall postSendCall;
+
+	private NatPostCall postSendCall;
 	private int bufPosition;
-	
-	public NatIbvSge(NatPostSendCall postSendCall, IbvSge sge){
+
+	public NatIbvSge(NatPostCall postSendCall, IbvSge sge) {
 		this.addr = sge.getAddr();
 		this.length = sge.getLength();
 		this.lkey = sge.getLkey();

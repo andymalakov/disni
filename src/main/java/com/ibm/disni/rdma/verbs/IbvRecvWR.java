@@ -34,7 +34,7 @@ import java.util.LinkedList;
 
 /**
  * Represent a receive work request. Applications create work request and post them onto queue pairs for execution.
- * 
+ * <p>
  * Each work request is composed of several scatter/gather elements, each of which referring to one single buffer.
  */
 public class IbvRecvWR {
@@ -45,8 +45,12 @@ public class IbvRecvWR {
 	public IbvRecvWR() {
 	}
 
+	protected IbvRecvWR(LinkedList<IbvSge> sg_list) {
+		this.sg_list = sg_list;
+	}
+
 	/**
-	 * A unique identifier for this work request. A subsequent completion event will have a matching id. 
+	 * A unique identifier for this work request. A subsequent completion event will have a matching id.
 	 *
 	 * @return the wr_id
 	 */

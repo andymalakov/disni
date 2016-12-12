@@ -23,6 +23,7 @@ package com.ibm.disni.rdma.verbs.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.ibm.disni.rdma.verbs.IbvQP;
@@ -33,15 +34,15 @@ import com.ibm.disni.util.MemBuf;
 import com.ibm.disni.util.MemoryAllocation;
 
 
-public class NatPostRecvCall extends SVCPostRecv {
+public class NatPostRecvCall extends SVCPostRecv implements NatPostCall {
 	private NativeDispatcher nativeDispatcher;
 	private RdmaVerbsNat verbs;
 	private MemoryAllocation memAlloc;
 	
-	private NatIbvQP qp;
 	private ArrayList<NatIbvRecvWR> wrNatList;
-	private ArrayList<IbvSge> sgeNatList;
-	
+	private ArrayList<NatIbvSge> sgeNatList;
+	private NatIbvQP qp;
+
 	private MemBuf cmd;
 	private boolean valid;
 	
@@ -49,9 +50,9 @@ public class NatPostRecvCall extends SVCPostRecv {
 		this.verbs = verbs;
 		this.nativeDispatcher = nativeDispatcher;
 		this.memAlloc = memAlloc;
-		
-		this.wrNatList = new ArrayList<NatIbvRecvWR>();
-		this.sgeNatList = new ArrayList<IbvSge>();
+
+		this.wrNatList = new ArrayList<>();
+		this.sgeNatList = new ArrayList<>();
 		this.valid = false;
 	}
 	
@@ -64,13 +65,18 @@ public class NatPostRecvCall extends SVCPostRecv {
 		long sgeOffset = wrList.size()*NatIbvRecvWR.CSIZE;
 		long wrOffset = NatIbvRecvWR.CSIZE;
 		for (IbvRecvWR recvWR : wrList){
-			NatIbvRecvWR natRecvWR = new NatIbvRecvWR(recvWR);
+			LinkedList<IbvSge> sg_list = new LinkedList<IbvSge>();
+			for (IbvSge sge : recvWR.getSg_list()) {
+				NatIbvSge natSge = new NatIbvSge(this, sge);
+				sg_list.add(natSge);
+				sgeNatList.add(natSge);
+			}
+
+			NatIbvRecvWR natRecvWR = new NatIbvRecvWR(this, recvWR, sg_list);
 			natRecvWR.setPtr_sge_list(sgeOffset);
 			natRecvWR.setNext(wrOffset);
-			
 			wrNatList.add(natRecvWR);
-			sgeNatList.addAll(recvWR.getSg_list());
-			
+
 			size += NatIbvRecvWR.CSIZE;
 			size += recvWR.getSg_list().size()*NatIbvSge.CSIZE;
 			wrOffset += NatIbvRecvWR.CSIZE;
@@ -125,8 +131,31 @@ public class NatPostRecvCall extends SVCPostRecv {
 	}
 
 	@Override
-	public RecvWRMod getWrMod(int index) throws IOException {
+	public RecvWRMod getWrMod(int index) {
 		return wrNatList.get(index);
 	}
 
+	void setWr_id(NatIbvRecvWR recvWR, int offset) {
+		int position = recvWR.getBufPosition() + offset;
+		cmd.getBuffer().putLong(position, recvWR.getWr_id());
+	}
+
+
+	@Override
+	public void setAddr(NatIbvSge sge, int offset) {
+		int position = sge.getBufPosition() + offset;
+		cmd.getBuffer().putLong(position, sge.getAddr());
+	}
+
+	@Override
+	public void setLength(NatIbvSge sge, int offset) {
+		int position = sge.getBufPosition() + offset;
+		cmd.getBuffer().putInt(position, sge.getLength());
+	}
+
+	@Override
+	public void setLkey(NatIbvSge sge, int offset) {
+		int position = sge.getBufPosition() + offset;
+		cmd.getBuffer().putInt(position, sge.getLkey());
+	}
 }

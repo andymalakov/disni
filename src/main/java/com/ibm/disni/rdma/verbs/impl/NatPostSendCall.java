@@ -35,7 +35,7 @@ import com.ibm.disni.util.MemBuf;
 import com.ibm.disni.util.MemoryAllocation;
 
 
-public class NatPostSendCall extends SVCPostSend {
+public class NatPostSendCall extends SVCPostSend implements NatPostCall {
 	private NativeDispatcher nativeDispatcher;
 	private RdmaVerbsNat verbs;
 	private MemoryAllocation memAlloc;
@@ -157,19 +157,22 @@ public class NatPostSendCall extends SVCPostSend {
 		cmd.getBuffer().putInt(position, rdma.getReserved());
 	}
 
+	@Override
 	public void setAddr(NatIbvSge sge, int offset) {
 		int position = sge.getBufPosition() + offset;
 		cmd.getBuffer().putLong(position, sge.getAddr());
 	}
 
+	@Override
 	public void setLength(NatIbvSge sge, int offset) {
 		int position = sge.getBufPosition() + offset;
-		cmd.getBuffer().putInt(position, sge.getLength());		
+		cmd.getBuffer().putInt(position, sge.getLength());
 	}
 
+	@Override
 	public void setLkey(NatIbvSge sge, int offset) {
 		int position = sge.getBufPosition() + offset;
-		cmd.getBuffer().putInt(position, sge.getLkey());	
+		cmd.getBuffer().putInt(position, sge.getLkey());
 	}
 	
 	void setSend_flags(NatIbvSendWR sendWR, int offset) {

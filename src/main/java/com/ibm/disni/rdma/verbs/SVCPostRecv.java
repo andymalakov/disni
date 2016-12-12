@@ -21,8 +21,6 @@
 
 package com.ibm.disni.rdma.verbs;
 
-import java.io.IOException;
-
 /**
  * The Class SVCPostRecv.
  * 
@@ -35,21 +33,45 @@ public abstract class SVCPostRecv implements StatefulVerbCall<SVCPostRecv> {
 	 *
 	 * @param index the work request
 	 * @return the work request
-	 * @throws Exception in case the index is out-of-bound.
 	 */
-	public abstract RecvWRMod getWrMod(int index) throws IOException;
+	public abstract RecvWRMod getWrMod(int index);
 	
 	/**
 	 * Provides access methods to modify a given work-request belonging to this SVC object.
 	 */
-	public static interface RecvWRMod {
+	public interface RecvWRMod {
 		
 		/**
 		 * Retrieve the current work-request id 
 		 *
 		 * @return the wr_id
 		 */
-		public long getWr_id();
-	}	
-	
+		long getWr_id();
+
+		/**
+		 * Modify the work-request id
+		 *
+		 * @param wr_id the new wr_id
+		 */
+		void setWr_id(long wr_id);
+
+
+		/**
+		 * Returns a specific scatter/gather element of this work request.
+		 *
+		 * @param index the sg element.
+		 * @return the sg element.
+		 */
+		SgeMod getSgeMod(int index);
+
+		/**
+		 * The number of scatter/gather elements in this work request.
+		 *
+		 * @return the num_sge
+		 */
+		int getNum_sge();
+
+
+	}
+
 }
