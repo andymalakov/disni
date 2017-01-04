@@ -853,7 +853,7 @@ JNIEXPORT jlong JNICALL Java_com_ibm_disni_rdma_verbs_impl_NativeDispatcher__1re
 
 			log("j2c::regMr: obj_id %llu, mr %llu\n", obj_id, mr);
 		} else {
-			log("j2c::regMr: ibv_reg_mr failed\n");
+			log("j2c::regMr: ibv_reg_mr failed, error %s\n", strerror(errno));
 		}
 	} else {
 		log("j2c::regMr: protection null\n");
